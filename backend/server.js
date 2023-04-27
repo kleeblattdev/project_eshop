@@ -4,6 +4,12 @@ import morgan from "morgan";
 import multer from "multer";
 import cookieParser from "cookie-parser";
 import "./config/config.js";
+import {
+	encryptPassword,
+	verifyJWTCookie,
+} from "./middleware/authMiddleware.js";
+import { login, logout, register } from "./controller/clientController.js";
+import { checkMailToken } from "./controller/authController.js";
 
 const PORT = process.env.PORT || 3000;
 
@@ -11,14 +17,15 @@ const app = express();
 const upload = multer();
 
 app.use(morgan("tiny"));
-app.use(cors());
+app.use(cors({ origin: true, credentials: true }));
 app.use(express.json());
 app.use(cookieParser());
 
 //Register and Login Routes
-app.get("/register");
-app.get("login");
-app.get("logout");
+app.post("/register", encryptPassword, register);
+app.post("/login", encryptPassword, login);
+app.post("/auth", checkMailToken);
+app.post("/logout", verifyJWTCookie, logout);
 
 //Order Routes
 

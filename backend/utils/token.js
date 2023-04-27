@@ -1,11 +1,25 @@
 import jwt from "jsonwebtoken";
 
 export const createJWToken = (claim) => {
-	const token = jwt.sign(claim, process.env.JWT_SECRET, { expiresIn: "30min" });
-	return token;
+	return jwt.sign(claim, process.env.JWT_SECRET, { expiresIn: "1h" });
 };
 
 export const verifyJWToken = (token) => {
-	const verification = jwt.verify(token, process.env.JWT_SECRET);
-	return verification;
+	return jwt.verify(token, process.env.JWT_SECRET);
+};
+
+export const createMailToken = (claim) => {
+	const secret = createSecret(1000, 9999);
+	const token = jwt.sign(claim, secret + process.env.JWT_MAIL_SECRET, {
+		expiresIn: "30m",
+	});
+	return { secret, token };
+};
+
+export const verifyMailToken = (token, secret) => {
+	return jwt.verify(token, secret + process.env.JWT_SECRET);
+};
+
+const createSecret = (min, max) => {
+	return Math.floor(Math.random() * (max - min) + min);
 };

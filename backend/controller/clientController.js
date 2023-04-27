@@ -1,5 +1,6 @@
 import { getDB } from "../utils/db.js";
-import { createJWToken } from "../utils/token.js";
+import { sendMail } from "../utils/mail.js";
+import { createMailToken } from "../utils/token.js";
 
 const COL = "client";
 
@@ -17,9 +18,9 @@ export const register = async (req, res) => {
 	const db = await getDB();
 	if (await checkClient(req.body.user)) {
 		await db.collection(COL).insertOne(req.body);
-		res.end();
+		res.send({ message: "successfully registered" }).end();
 	} else {
-		res.status(401).end();
+		res.status(401).send({ message: "This email is already registered" }).end();
 	}
 };
 
@@ -29,15 +30,14 @@ export const login = async (req, res) => {
 		.collection(COL)
 		.findOne({ user: req.body.user, password: req.body.password });
 	if (response === null) {
-		res.status(401).end();
+		res
+			.status(401)
+			.send({ message: "Did you type the wrong email or password?" })
+			.end();
 	} else {
-		const token = createJWToken({ user: response._id });
-		res.cookie("access_token", token, {
-			httpOnly: true,
-			secure: true,
-			sameSite: "none",
-		});
-		res.end();
+		const mailToken = createMailToken({ user: response._id });
+		sendMail(result.email, mailToken);
+		res.json({ token: mailToken.token });
 	}
 };
 
