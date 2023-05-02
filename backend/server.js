@@ -29,8 +29,14 @@ app.post("/auth", checkMailToken);
 app.post("/logout", verifyJWTCookie, logout);
 
 //Order Routes
+app.get("/orders");
+app.post("/orders");
+app.delete("/orders");
 
 //Product Routes
+app.get("/products");
+app.post("/products");
+app.delete("/products");
 
 //
 
