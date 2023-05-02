@@ -4,9 +4,9 @@ import { createMailToken } from "../utils/token.js";
 
 const COL = "client";
 
-const checkClient = async (user) => {
+const checkClient = async (username) => {
 	const db = await getDB();
-	const result = await db.collection(COL).findOne({ user });
+	const result = await db.collection(COL).findOne({ username });
 	if (result === null) {
 		return true;
 	} else {
@@ -16,7 +16,7 @@ const checkClient = async (user) => {
 
 export const register = async (req, res) => {
 	const db = await getDB();
-	if (await checkClient(req.body.user)) {
+	if (await checkClient(req.body.username)) {
 		await db.collection(COL).insertOne(req.body);
 		res.send({ message: "successfully registered" }).end();
 	} else {
@@ -28,14 +28,14 @@ export const login = async (req, res) => {
 	const db = await getDB();
 	const response = await db
 		.collection(COL)
-		.findOne({ user: req.body.user, password: req.body.password });
+		.findOne({ user: req.body.username, password: req.body.password });
 	if (response === null) {
 		res
 			.status(401)
 			.send({ message: "Did you type the wrong email or password?" })
 			.end();
 	} else {
-		const mailToken = createMailToken({ user: response._id });
+		const mailToken = createMailToken({ username: response._id });
 		sendMail(result.email, mailToken);
 		res.json({ token: mailToken.token });
 	}

@@ -1,5 +1,5 @@
-import createHmac from "crypto";
-import { verifyJWToken } from "../utils/token";
+import { createHmac } from "crypto";
+import { verifyJWToken } from "../utils/token.js";
 
 export const encryptPassword = (req, _, next) => {
 	const hmac = createHmac("sha256", req.body.password);

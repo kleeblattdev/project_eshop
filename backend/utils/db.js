@@ -11,7 +11,7 @@ export const getDB = async () => {
 	if (db) return db;
 	else {
 		await client.connect();
-		db = client.db(DB);
+		db = client.db(MONGO_DB);
 		return db;
 	}
 };

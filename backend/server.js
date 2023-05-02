@@ -10,6 +10,7 @@ import {
 } from "./middleware/authMiddleware.js";
 import { login, logout, register } from "./controller/clientController.js";
 import { checkMailToken } from "./controller/authController.js";
+import { validateSchema } from "./middleware/validationMiddleware.js";
 
 const PORT = process.env.PORT || 3000;
 
@@ -22,7 +23,7 @@ app.use(express.json());
 app.use(cookieParser());
 
 //Register and Login Routes
-app.post("/register", encryptPassword, register);
+app.post("/register", validateSchema, encryptPassword, register);
 app.post("/login", encryptPassword, login);
 app.post("/auth", checkMailToken);
 app.post("/logout", verifyJWTCookie, logout);
