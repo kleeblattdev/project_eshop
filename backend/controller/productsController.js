@@ -15,11 +15,11 @@ export const getProducts = async (_, res) => {
 export const addProduct = async (req, res) => {
 	const db = await getDB();
 	const result = await db.collection(COL).insertOne(req.body);
-	res.json();
+	res.json({ message: "Product added successfully" });
 };
 
-export const deleteProduct = async (req, res) => {
+export const deleteProduct = async (_, res) => {
 	const db = await getDB();
 	const result = await db.collection(COL).findOneAndDelete();
-	res.end();
+	res.json({ message: "Product deleted successfully" });
 };

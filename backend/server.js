@@ -11,6 +11,16 @@ import {
 import { login, logout, register } from "./controller/clientController.js";
 import { checkMailToken } from "./controller/authController.js";
 import { validateSchema } from "./middleware/validationMiddleware.js";
+import {
+	addOrder,
+	getOrders,
+	removeOrder,
+} from "./controller/ordersController.js";
+import {
+	addProduct,
+	deleteProduct,
+	getProducts,
+} from "./controller/productsController.js";
 
 const PORT = process.env.PORT || 3000;
 
@@ -29,14 +39,14 @@ app.post("/auth", checkMailToken);
 app.post("/logout", verifyJWTCookie, logout);
 
 //Order Routes
-app.get("/orders");
-app.post("/orders");
-app.delete("/orders");
+app.get("/orders", getOrders);
+app.post("/orders", addOrder);
+app.delete("/orders", removeOrder);
 
 //Product Routes
-app.get("/products");
-app.post("/products");
-app.delete("/products");
+app.get("/products", getProducts);
+app.post("/products", addProduct);
+app.delete("/products", deleteProduct);
 
 //
 
